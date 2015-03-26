@@ -3,6 +3,7 @@ include_once "./citypic.php";
 include_once "./libs/btog.php";
 include_once "./conn.php";
 include_once "./dictionary.php";
+include_once "./feedback.php";
 
 define("TOKEN", "alex");
 $wechatObj = new wechatCallbackapiTest();
@@ -89,6 +90,9 @@ class wechatCallbackapiTest
                 if (!empty($keyword)) {
                     if (preg_match("/^[a-zA-Z\s\-]+$/i", $keyword)) {
                         $this->interpret($keyword);
+                    }
+                    else if ($keyword == '反馈') {
+                        $this->output(getFeedback());
                     }
                     else if (substr_count($keyword, '天气') != 0 && $keyword != '天气') {
                         $this->getWeather();
