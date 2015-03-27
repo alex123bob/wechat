@@ -78,6 +78,9 @@ class wechatCallbackapiTest
             $keyword = $chinese->big5_gb2312($keyword);
             array_push($this->basicInfo, $keyword, $fromUsername, $toUsername);
 
+            // record user action.
+            $this->recordUserAction($fromUsername, $keyword);
+
             if ($type == "event" and $cus == "subscribe") {
                 $this->output("感谢您的关注\n\n1、输入\"城市+天气\"查天气，例：北京天气\n2、输入\"城市+地图\"查城市地图，例：上海地图\n3、其他输入有专职simsimi陪您解闷\n\n感谢您的支持\n~Alexander.Cornucopia.Li");
             }
@@ -127,6 +130,14 @@ class wechatCallbackapiTest
             echo "";
             exit;
         }
+    }
+
+    // Records all user action. push data into database.
+    private function recordUserAction ($userAccount, $content)
+    {
+        global $mysql;
+        $time = date("Y-m-d H:i:s");
+        $mysql->DBInsert("`wechat_content`", "`useraccount`, `sendtime`, `messagecontent`", "'$userAccount', '$time', '$content'");
     }
 
     private function outputVoice($num, $isRand = false){
